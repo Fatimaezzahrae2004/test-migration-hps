@@ -1,0 +1,22 @@
+{{- if .Values.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: demo-ingress
+  annotations:
+    # Optionnel : pour forcer la redirection ou d'autres comportements
+    kubernetes.io/ingress.class: "nginx" 
+spec:
+  ingressClassName: nginx 
+  rules:
+  - host: {{ .Values.host | quote }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: demo-app 
+            port:
+              number: 80
+{{- end -}}

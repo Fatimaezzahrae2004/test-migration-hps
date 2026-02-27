@@ -1,9 +1,40 @@
+# --- Configuration de l'Application ---
 replicaCount: 1
 
 image:
   repository: nginx
   tag: latest
 
+# Configuration du Service Kubernetes
 service:
-  type: ClusterIP
   port: 80
+  targetPort: 80
+
+# --- Paramètres Réseau ---
+# Liste des domaines autorisés 
+host: "demo.local" 
+hosts:
+  - "demo.local"
+  - "localhost"
+
+# --- INTERRUPTEURS DE PROTOCOLES ---
+
+# 1. Architecture Classique (Désactivée)
+ingress:
+  enabled: false
+  className: "nginx"
+
+# 2. Architecture Moderne (Activée)
+gateway:
+  enabled: true
+  className: "nginx"
+
+# 3. Sécurité & HTTP/2 (Obligatoire pour gRPC et h2)
+tls:
+  enabled: true
+  secretName: "demo-tls-secret"
+
+# 4. Flux Bancaires / TCP (Port 9000)
+tcp:
+  enabled: true
+  port: 9000

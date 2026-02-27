@@ -1,0 +1,37 @@
+{{- if .Values.gateway.enabled -}}
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: pwc-central-gateway
+spec:
+  gatewayClassName: {{ .Values.gateway.className | default "nginx" }}
+  listeners:
+    # --- Listener 1: HTTP (Port 80) ---
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: All
+
+    # --- Listener 2: HTTPS (Port 443 pour HTTP/2) ---
+    - name: https
+      protocol: HTTPS
+      port: 443
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: {{ .Values.tls.secretName | default "demo-tls-secret" }}
+      allowedRoutes:
+        namespaces:
+          from: All
+
+    # --- Listener 3: TCP (Port 9000 pour flux bruts) ---
+    # Ce listener permettra de router du trafic non-HTTP
+    - name: tcp-raw
+      protocol: TCP
+      port: 9000
+      allowedRoutes:
+        namespaces:
+          from: All
+{{- end -}}

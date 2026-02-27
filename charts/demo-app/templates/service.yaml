@@ -7,5 +7,11 @@ spec:
   selector:
     app: demo-app
   ports:
-    - port: {{ .Values.service.port }}
+    - name: http
+      port: 80
       targetPort: 80
+    {{- if .Values.grpc.enabled }}
+    - name: grpc
+      port: {{ .Values.grpc.port }}
+      targetPort: {{ .Values.grpc.port }}
+    {{- end }}

@@ -1,0 +1,12 @@
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TCPRoute
+metadata:
+  name: demo-tcp-route
+spec:
+  parentRefs:
+    - name: pwc-central-gateway
+      sectionName: tcp-raw
+  rules:
+    - backendRefs:
+        - name: demo-app
+          port: 80
